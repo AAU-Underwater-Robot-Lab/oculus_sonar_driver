@@ -8,7 +8,7 @@
 
 OculusPublisher::OculusPublisher() : dataRx_( nullptr ) {
   ros::NodeHandle n_;
-  oculus_pub_ = n_.advertise<imaging_sonar_msgs::ImagingSonarMsg>("sonar_info", 1000);
+  oculus_pub_ = n_.advertise<imaging_sonar_msgs::ImagingSonarMsg>("sonar_data", 1000);
   //std::thread thread_obj(std::bind(&OculusPublisher::reconfigListener, this));
   // Get parameter values from launch file.
   // if no launch file was used, set equal to default values
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
   logWorker.logBanner();
   logWorker.verbose(2);
 
-  ros::init(argc, argv, "oculus_node");
+  ros::init(argc, argv, "oculus_sonar");
 
    dynamic_reconfigure::Server<oculus_sonar_ros::OculusSonarConfig> server;
    dynamic_reconfigure::Server<oculus_sonar_ros::OculusSonarConfig>::CallbackType f;
