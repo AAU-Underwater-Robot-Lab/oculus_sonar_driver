@@ -2,6 +2,8 @@
 
 [![Build Status](https://gitlab.drone.camhd.science/api/badges/apl-ocean-engineering/oculus_sonar_driver/status.svg)](https://gitlab.drone.camhd.science/apl-ocean-engineering/oculus_sonar_driver)
 
+** This branch is for the "v1" release which depends on the "api_v1" version of [liboculus](https://github.com/apl-ocean-engineering/liboculus)**
+
 ROS nodes that use [liboculus](https://github.com/apl-ocean-engineering/liboculus) to interface with a [Blueprint Subsea Oculus sonar](https://www.blueprintsubsea.com/oculus/index.php) sonar and publish to ROS topics.
 Currently runs on ROS Melodic, Ubuntu 18.04.
 
