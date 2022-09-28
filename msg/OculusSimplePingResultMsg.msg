@@ -18,7 +18,7 @@ uint16 dst_device_id    # The device id of the destination
 uint16 msg_id           # Message identifier
 uint16 msg_version
 uint32 payload_size     # The size of the message payload (header not included)
-uint16 header_spare2
+#uint16 header_spare2
 
 ## Fields from OculusSimpleFireMessage / OculusSimpleFireMessage2
 uint8 master_mode
@@ -49,10 +49,10 @@ uint8 data_size   # The size of the individual data entries */
 float64 range_resolution  # The range in metres corresponding to a single range line
 uint16 n_ranges		     # The number of range lines in the image
 uint16 n_beams		     # The number of bearings in the image
-uint32 spare0
-uint32 spare1
-uint32 spare2
-uint32 spare3
+#uint32 spare0
+#uint32 spare1
+#uint32 spare2
+#uint32 spare3
 uint32 image_offset      # The offset in bytes of the image data from the start
 uint32 image_size        # The size in bytes of the image data
 uint32 message_size      # The total size in bytes of the network message

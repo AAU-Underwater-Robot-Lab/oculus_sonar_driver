@@ -24,7 +24,7 @@ OculusSimplePingResultMsg pingToPingResultCommon(const liboculus::SimplePingResu
   ping_result.msg_id = ping.ping()->fireMessage.head.msgId;
   ping_result.msg_version = ping.ping()->fireMessage.head.msgVersion;
   ping_result.payload_size = ping.ping()->fireMessage.head.payloadSize;
-  ping_result.spare2 = ping.ping()->fireMessage.head.spare2;
+  //ping_result.spare2 = ping.ping()->fireMessage.head.spare2;
 
   // ## Fields from OculusSimpleFireMessage / OculusSimpleFireMessage2
   ping_result.master_mode = ping.ping()->fireMessage.masterMode;
