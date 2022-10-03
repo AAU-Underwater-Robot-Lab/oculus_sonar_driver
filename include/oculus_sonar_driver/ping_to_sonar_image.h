@@ -46,8 +46,8 @@ acoustic_msgs::ProjectedSonarImage pingToSonarImage(
   for (unsigned int idx = 0; idx < num_bearings; idx++) {
     float az = ping.bearings().at_rad(idx);
     sonar_image.beam_directions[idx].x = 0.0;  // Assuming elevation is 0
-    sonar_image.beam_directions[idx].x = -1 * sin(az);
-    sonar_image.beam_directions[idx].x = cos(az);
+    sonar_image.beam_directions[idx].y = -1 * sin(az);
+    sonar_image.beam_directions[idx].z = cos(az);
   }
 
   // QUESTION(lindzey): Is this actually right?
