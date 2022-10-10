@@ -26,7 +26,6 @@ uint8 ping_rate
 uint8 network_speed      #  The max network speed in Mbs , set to 0x00 or 0xff to use link speed
 uint8 gamma_correction   # The gamma correction - 255 is equal to a gamma correction of 1.0
 uint8 flags
-float64 range_percent     # The range demand (%)
 float64 range             # The range  -- could be meters or percent?
 
 float64 gain_percent      # The percentage gain
@@ -45,7 +44,9 @@ float64 pitch			 # The pitch (degrees)
 float64 roll			     # The roll (degrees)
 float64 speed_of_sound_used  # The actual used speed of sound (m/s)
 float64 ping_start_time   # In seconds from sonar powerup (to microsecond resolution)
-uint8 data_size   # The size of the individual data entries */
+uint8 data_size           # The size of the individual data entries 
+                          # Remember this is the _raw_ value from the Oculus,
+                          # which goes 1-2-3, not 1-2-4 (bytes)
 float64 range_resolution  # The range in metres corresponding to a single range line
 uint16 n_ranges		     # The number of range lines in the image
 uint16 n_beams		     # The number of bearings in the image

@@ -83,7 +83,6 @@ pingToPingResult<OculusSimplePingResult>(
   auto ping_result = pingToPingResultCommon(ping);
 
   ping_result.range =  ping.ping()->fireMessage.range;
-  ping_result.range_percent = -1;
 
       return ping_result;
 }
@@ -96,7 +95,7 @@ OculusSimplePingResultMsg
 pingToPingResult<OculusSimplePingResult2>(
     const liboculus::SimplePingResultV2 &ping) {
   auto ping_result = pingToPingResultCommon(ping);
-  ping_result.range_percent = ping.ping()->fireMessage.rangePercent;
+  ping_result.range = ping.ping()->fireMessage.rangePercent;
   ping_result.ext_flags = ping.ping()->fireMessage.extFlags;
 
   ping_result.heading = ping.ping()->heading;

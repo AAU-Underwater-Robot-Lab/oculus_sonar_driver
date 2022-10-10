@@ -23,7 +23,7 @@
 
 #include "oculus_sonar_driver/publishing_data_rx.h"
 #include "oculus_sonar_driver/ping_to_sonar_image.h"
-#include "oculus_sonar_driver/ping_to_ping_result.h"
+#include "oculus_sonar_driver/ping_to_simple_ping_result_msg.h"
 
 // Auto-generated files
 #include "oculus_sonar_driver/OculusSonarConfig.h"
