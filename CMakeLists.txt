@@ -10,31 +10,15 @@ set(OpenCV_DIR /usr/share/OpenCV/)
 find_package(catkin REQUIRED COMPONENTS
   acoustic_msgs
   cmake_modules
-  cv_bridge
-  sonar_image_proc
   dynamic_reconfigure
   g3log_ros
-  image_transport
-  liboculus REQUIRED
-  message_generation
+  blueprint_oculus_msgs
+  liboculus
   nodelet
   nodelet_topic_tools
   roscpp
-  rospy
-  sensor_msgs
-  std_msgs
   apl_msgs
 )
-
-## Build messages
-add_message_files(
-  FILES
-  OculusMetadata.msg
-  OculusSimplePingResultMsg.msg
-)
-
-generate_messages(DEPENDENCIES std_msgs)
-
 
 #add dynamic reconfigure api
 generate_dynamic_reconfigure_options(
@@ -43,7 +27,6 @@ generate_dynamic_reconfigure_options(
 
 ## Compile as C++14, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
-
 
 catkin_package(
   INCLUDE_DIRS include

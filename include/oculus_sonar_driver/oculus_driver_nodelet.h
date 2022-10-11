@@ -27,8 +27,8 @@
 
 // Auto-generated files
 #include "oculus_sonar_driver/OculusSonarConfig.h"
-#include "oculus_sonar_driver/OculusMetadata.h"
-#include "oculus_sonar_driver/OculusSimplePingResultMsg.h"
+#include "blueprint_oculus_msgs/OculusMetadata.h"
+#include "blueprint_oculus_msgs/OculusSimplePingResultMsg.h"
 
 namespace oculus_sonar_driver {
 
@@ -48,7 +48,7 @@ class OculusDriver : public nodelet::Nodelet {
     sonar_msg.header.frame_id = frame_id_;
     imaging_sonar_pub_.publish(sonar_msg);
 
-    oculus_sonar_driver::OculusMetadata meta;
+    blueprint_oculus_msgs::OculusMetadata meta;
     meta.header = sonar_msg.header;
 
     // \todo Make this cleaner...
@@ -58,7 +58,7 @@ class OculusDriver : public nodelet::Nodelet {
     oculus_meta_pub_.publish(meta);
 
     {
-      oculus_sonar_driver::OculusSimplePingResultMsg ping_result = pingToPingResult(ping);
+      blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result = pingToPingResult(ping);
 
       ping_result.header.seq = ping.ping()->pingId;
       ping_result.header.stamp = ros::Time::now();

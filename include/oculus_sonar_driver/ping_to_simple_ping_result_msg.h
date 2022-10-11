@@ -5,7 +5,7 @@
 
 #include "ros/ros.h"
 
-#include "oculus_sonar_driver/OculusSimplePingResultMsg.h"
+#include "blueprint_oculus_msgs/OculusSimplePingResultMsg.h"
 #include "liboculus/SimplePingResult.h"
 #include "liboculus/Constants.h"
 
@@ -15,8 +15,8 @@ namespace oculus_sonar_driver {
 //  SimplePingResult and SimplePingResultV2 headers.
 //
 template<typename PingT>
-OculusSimplePingResultMsg pingToPingResultCommon(const liboculus::SimplePingResult<PingT> &ping) {
-  OculusSimplePingResultMsg ping_result;
+blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(const liboculus::SimplePingResult<PingT> &ping) {
+  blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result;
 
   // Fields from OculusMessageHeader
   ping_result.src_device_id = ping.ping()->fireMessage.head.srcDeviceId;
@@ -68,7 +68,7 @@ OculusSimplePingResultMsg pingToPingResultCommon(const liboculus::SimplePingResu
 // potential types (below)
 //
 template <typename PingT>
-OculusSimplePingResultMsg
+blueprint_oculus_msgs::OculusSimplePingResultMsg
 pingToPingResult(const liboculus::SimplePingResult<PingT> &ping) {
   return pingToPingResultCommon(ping);
 }
@@ -77,9 +77,9 @@ pingToPingResult(const liboculus::SimplePingResult<PingT> &ping) {
 // Handles extra fields that don't exist in SimplePingResultV2
 //
 template <>
-OculusSimplePingResultMsg
+blueprint_oculus_msgs::OculusSimplePingResultMsg
 pingToPingResult<OculusSimplePingResult>(
-    const liboculus::SimplePingResult<OculusSimplePingResult> &ping) {
+  const liboculus::SimplePingResult<OculusSimplePingResult> &ping) {
   auto ping_result = pingToPingResultCommon(ping);
 
   ping_result.range =  ping.ping()->fireMessage.range;
@@ -91,16 +91,16 @@ pingToPingResult<OculusSimplePingResult>(
 // Handles extra fields that don't exist in SimplePingResultV1
 //
 template <>
-OculusSimplePingResultMsg
+blueprint_oculus_msgs::OculusSimplePingResultMsg
 pingToPingResult<OculusSimplePingResult2>(
-    const liboculus::SimplePingResultV2 &ping) {
+  const liboculus::SimplePingResultV2 &ping) {
   auto ping_result = pingToPingResultCommon(ping);
   ping_result.range = ping.ping()->fireMessage.rangePercent;
   ping_result.ext_flags = ping.ping()->fireMessage.extFlags;
 
   ping_result.heading = ping.ping()->heading;
   ping_result.pitch = ping.ping()->pitch;
-  ping_result.roll	= ping.ping()->roll;
+  ping_result.roll = ping.ping()->roll;
 
   return ping_result;
 }
