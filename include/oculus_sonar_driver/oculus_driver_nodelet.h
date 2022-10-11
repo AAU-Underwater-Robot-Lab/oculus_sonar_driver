@@ -23,10 +23,12 @@
 
 #include "oculus_sonar_driver/publishing_data_rx.h"
 #include "oculus_sonar_driver/ping_to_sonar_image.h"
+#include "oculus_sonar_driver/ping_to_simple_ping_result_msg.h"
 
 // Auto-generated files
 #include "oculus_sonar_driver/OculusSonarConfig.h"
 #include "oculus_sonar_driver/OculusMetadata.h"
+#include "oculus_sonar_driver/OculusSimplePingResultMsg.h"
 
 namespace oculus_sonar_driver {
 
@@ -53,8 +55,17 @@ class OculusDriver : public nodelet::Nodelet {
     for (unsigned int i = 0; i < ping.gains().size(); i++) {
       meta.tvg.push_back(ping.gains().at(i));
     }
-
     oculus_meta_pub_.publish(meta);
+
+    {
+      oculus_sonar_driver::OculusSimplePingResultMsg ping_result = pingToPingResult(ping);
+
+      ping_result.header.seq = ping.ping()->pingId;
+      ping_result.header.stamp = ros::Time::now();
+      ping_result.header.frame_id = frame_id_;
+
+      oculus_simple_ping_result_pub_.publish(ping_result);
+    }
   }
 
   // Update configuration based on command from dynamic_reconfigure
@@ -71,6 +82,7 @@ class OculusDriver : public nodelet::Nodelet {
 
   ros::Publisher imaging_sonar_pub_;
   ros::Publisher oculus_meta_pub_;
+  ros::Publisher oculus_simple_ping_result_pub_;
   ros::Publisher raw_data_pub_;
 
   std::string ip_address_;
