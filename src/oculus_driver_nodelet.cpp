@@ -21,6 +21,7 @@ OculusDriver::OculusDriver()
     io_srv_(),
     data_rx_(io_srv_.context()),
     status_rx_(io_srv_.context()),
+    sonar_config_(),
     reconfigure_server_()
 {;}
 
@@ -82,11 +83,12 @@ void OculusDriver::onInit() {
     data_rx_.connect(ip_address_);
   }
 
+  io_srv_.start();
+
   reconfigure_server_.reset(new ReconfigureServer(pn_));
   reconfigure_server_->setCallback(boost::bind(&OculusDriver::configCallback,
                                             this, _1, _2));
 
-  io_srv_.start();
 }
 
 // Updates sonar parameters
