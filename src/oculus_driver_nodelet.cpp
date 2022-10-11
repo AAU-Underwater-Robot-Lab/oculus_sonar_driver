@@ -30,9 +30,6 @@ OculusDriver::~OculusDriver() {
 }
 
 void OculusDriver::onInit() {
-  reconfigure_server_.setCallback(boost::bind(&OculusDriver::configCallback,
-                                              this, _1, _2));
-
   ros::NodeHandle n_(getMTNodeHandle());
   ros::NodeHandle pn_(getMTPrivateNodeHandle());
 
@@ -84,6 +81,10 @@ void OculusDriver::onInit() {
     NODELET_INFO_STREAM("Opening sonar at " << ip_address_);
     data_rx_.connect(ip_address_);
   }
+
+  reconfigure_server_.reset(new ReconfigureServer(pn_));
+  reconfigure_server_->setCallback(boost::bind(&OculusDriver::configCallback,
+                                            this, _1, _2));
 
   io_srv_.start();
 }
