@@ -4,7 +4,7 @@
 #pragma once
 
 #include "ros/ros.h"
-#include "nodelet/nodelet.h" 
+#include "nodelet/nodelet.h"
 
 #include "apl_msgs/RawData.h"
 
@@ -15,7 +15,7 @@ class ReprocessOculusRawData : public nodelet::Nodelet {
   ReprocessOculusRawData();
   virtual ~ReprocessOculusRawData();
 
-  // Translate SimplePingResult to SonarImage and publish
+  // Translate SimplePingResult to ProjectedSonarImage and publish
   void rawDataCallback(const apl_msgs::RawData::ConstPtr &raw_data);
 
  private:

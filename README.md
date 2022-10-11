@@ -10,7 +10,7 @@ At present we have only tested with the [Oculus M1200d](https://www.blueprintsub
 ## Contents
 
 This package defines the `oculus_sonar/driver` nodelet that interfaces with the sonar
-over ethernet and publishes [`acoustic_msgs::SonarImage`](https://github.com/apl-ocean-engineering/hydrographic_msgs/blob/main/acoustic_msgs/msg/SonarImage.msg) and
+over ethernet and publishes [`acoustic_msgs::ProjectedSonarImage`](https://github.com/apl-ocean-engineering/hydrographic_msgs/blob/main/acoustic_msgs/msg/ProjectedSonarImage.msg) and
 [`apl_msgs::RawData`](https://gitlab.com/apl-ocean-engineering/apl_msgs) messages.
 
 The package also builds a conventional node `oculus_driver` which is a trivial wrapper around a
@@ -38,7 +38,7 @@ See the comments in [`default_ros.launch`](launch/default_ros.launch) to set son
 The sonar params can be modified on the fly using dynamic reconfigure.  The launchfile [`default_ros.launch`](launch/default_ros.launch) starts the nodes in a nodelet manager `/nodelet_manager`.  The dynamic reconfigure params can be queried as:
 
 ```
-$ rosrun dynamic_reconfigure dynparam get /nodelet_manager           
+$ rosrun dynamic_reconfigure dynparam get /nodelet_manager
 {'send_range_as_meters': True, 'send_gain': True, 'send_simple_return': True, 'gain_assistance': False, 'all_beams': True, 'num_beams': 1, 'gamma': 127, 'ping_rate': 0, 'data_size': 0, 'freq_mode': 2, 'range': 2.0, 'gain': 50.0, 'groups': {'id': 0, 'parent': 0, 'name': 'Default', 'type': '', 'state': True, 'groups': {}, 'parameters': {}, 'send_range_as_meters': True, 'send_gain': True, 'send_simple_return': True, 'gain_assistance': False, 'num_beams': 1, 'all_beams': True, 'range': 2.0, 'gain': 50.0, 'gamma': 127, 'ping_rate': 0, 'data_size': 0, 'freq_mode': 2}}
 ```
 
@@ -77,7 +77,7 @@ etc.   This effect seems to be invariant of 256 v 512 beams, and 8/16/32 bit dat
 ----
 # Related Packages
 
-* [acoustic_msgs](https://github.com/apl-ocean-engineering/hydrographic_msgs/tree/main/acoustic_msgs) defines the ROS [SonarImage](https://github.com/apl-ocean-engineering/hydrographic_msgs/blob/main/acoustic_msgs/msg/SonarImage.msg) message type published by this node.
+* [acoustic_msgs](https://github.com/apl-ocean-engineering/hydrographic_msgs/tree/main/acoustic_msgs) defines the ROS [ProjectedSonarImage](https://github.com/apl-ocean-engineering/hydrographic_msgs/blob/main/acoustic_msgs/msg/ProjectedSonarImage.msg) message type published by this node.
 * [liboculus](https://github.com/apl-ocean-engineering/liboculus) is the underlying (non-ROS) library which parses handles the Oculus network protocol.  It also includes a Boost::Asio-based network client.
 * [sonar_image_proc](https://github.com/apl-ocean-engineering/sonar_image_proc) contains code to postprocess sonar data, including drawing the sonar data to an OpenCV Mat (contains both ROS and non-ROS code).
 * [rqt_sonar_image_view](https://github.com/apl-ocean-engineering/rqt_sonar_image_view) is an Rqt plugin for displaying sonar imagery (uses [sonar_image_proc](https://github.com/apl-ocean-engineering/sonar_image_proc))
