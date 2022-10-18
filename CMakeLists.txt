@@ -30,6 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   OculusMetadata.msg
+  OculusSimplePingResultMsg.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs)
@@ -61,7 +62,9 @@ add_library(oculus_driver_nodelet
             src/reprocess_oculus_raw_data.cpp)
 target_link_libraries(oculus_driver_nodelet ${catkin_LIBRARIES} harfbuzz freetype)
 class_loader_hide_library_symbols(oculus_driver_nodelet)
-add_dependencies(oculus_driver_nodelet ${catkin_EXPORTED_TARGETS})
+add_dependencies(oculus_driver_nodelet
+  ${catkin_EXPORTED_TARGETS}
+)
 
 ####
 add_executable(oculus_driver src/oculus_node.cpp)

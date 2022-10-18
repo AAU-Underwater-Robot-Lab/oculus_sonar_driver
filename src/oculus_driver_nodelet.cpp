@@ -3,7 +3,7 @@
 
 #include <boost/asio.hpp>
 
-#include <acoustic_msgs/SonarImage.h>
+#include <acoustic_msgs/ProjectedSonarImage.h>
 #include <apl_msgs/RawData.h>
 
 #include "liboculus/Constants.h"
@@ -39,8 +39,11 @@ void OculusDriver::onInit() {
   NODELET_DEBUG_STREAM("Advertising topics in namespace " << n_.getNamespace());
   NODELET_DEBUG_STREAM("Private namespace would be:" << pn_.getNamespace());
 
-  imaging_sonar_pub_ = n_.advertise<acoustic_msgs::SonarImage>("sonar_image", 10);
+  imaging_sonar_pub_ = n_.advertise<acoustic_msgs::ProjectedSonarImage>("sonar_image", 10);
   oculus_meta_pub_ = n_.advertise<oculus_sonar_driver::OculusMetadata>("oculus_metadata",10);
+
+  oculus_simple_ping_result_pub_ = n_.advertise<oculus_sonar_driver::OculusSimplePingResultMsg>("oculus_simple_ping_result", 10);
+  
   raw_data_pub_ = n_.advertise<apl_msgs::RawData>("raw_data", 100);
 
   // NB: Params set in the launch file go to /raven/oculus's namespace,
