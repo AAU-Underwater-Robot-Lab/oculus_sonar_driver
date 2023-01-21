@@ -13,6 +13,9 @@ namespace oculus_sonar_driver {
 // Packs an acoustic_msgs::ProjectedSonarImage from the contents of a
 // SimplePingResult
 //
+// Calling function is expected to fill in header, as required
+// data is not found in the SimplePingResult.
+//
 // \todo Currently has no way to indicate failure...
 template <typename PingT>
 acoustic_msgs::ProjectedSonarImage pingToSonarImage(
@@ -20,17 +23,31 @@ acoustic_msgs::ProjectedSonarImage pingToSonarImage(
   acoustic_msgs::ProjectedSonarImage sonar_image;
 
   sonar_image.ping_info.frequency = ping.ping()->frequency;
+  // QUESTION(lindzey): Is there a way to find out what sound speed
+  //    the Oculus used when computing ranges? I don't like leaving
+  //    this as the default value.
+  // sonar_image.ping_info.sound_speed = ????
   const int num_bearings = ping.ping()->nBeams;
   const int num_ranges = ping.ping()->nRanges;
 
   // These fields are frequency dependent
-  if (sonar_image.ping_info.frequency > 2000000) {
+  if ((sonar_image.ping_info.frequency > 2900000) &&
+      (sonar_image.ping_info.frequency < 3100000)) {
+    // 3.0 MHz
+    sonar_image.ping_info.rx_beamwidths = std::vector<float>(
+        num_bearings, liboculus::Oculus_3000MHz::AzimuthBeamwidthRad);
+    sonar_image.ping_info.tx_beamwidths = std::vector<float>(
+        num_bearings, liboculus::Oculus_3000MHz::ElevationBeamwidthRad);
+  } else if ((sonar_image.ping_info.frequency > 2000000) &&
+             (sonar_image.ping_info.frequency < 2200000)) {
+    // 2.1 MHz
     sonar_image.ping_info.rx_beamwidths = std::vector<float>(
         num_bearings, liboculus::Oculus_2100MHz::AzimuthBeamwidthRad);
     sonar_image.ping_info.tx_beamwidths = std::vector<float>(
         num_bearings, liboculus::Oculus_2100MHz::ElevationBeamwidthRad);
   } else if ((sonar_image.ping_info.frequency > 1100000) &&
              (sonar_image.ping_info.frequency < 1300000)) {
+    // 1.2 MHz
     sonar_image.ping_info.rx_beamwidths = std::vector<float>(
         num_bearings, liboculus::Oculus_1200MHz::AzimuthBeamwidthRad);
     sonar_image.ping_info.tx_beamwidths = std::vector<float>(
