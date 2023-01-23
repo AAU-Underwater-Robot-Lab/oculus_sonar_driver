@@ -95,6 +95,8 @@ acoustic_msgs::ProjectedSonarImage pingToSonarImage(
       ROS_ERROR_STREAM("Unrecognized data size: " << ping.dataSize());
   }
 
+  sonar_image.image.beam_count = num_bearings;
+
   for (unsigned int r = 0; r < num_ranges; r++) {
     for (unsigned int b = 0; b < num_bearings; b++) {
       if (ping.dataSize() == 1) {
