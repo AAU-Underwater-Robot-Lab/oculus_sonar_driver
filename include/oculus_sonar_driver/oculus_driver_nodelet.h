@@ -90,7 +90,8 @@ class OculusDriver : public nodelet::Nodelet {
 
   liboculus::SonarConfiguration sonar_config_;
 
-  dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig> reconfigure_server_;
+  typedef dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig> ReconfigureServer;
+  std::shared_ptr<ReconfigureServer> reconfigure_server_;
 };
 
 }  // namespace oculus_sonar

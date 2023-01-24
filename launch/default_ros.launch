@@ -26,12 +26,15 @@
   <arg name="draw_sonar" default="false"/>
   <arg name="postprocess_sonar" default="false"/>
 
-  <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+  <arg name="root" default="oculus" />
+  <arg name="manager" default="/$(arg root)/nodelet_manager" />
 
   <!--  launch-prefix="gdb -ex run args" -->
-  <group ns="oculus">
+  <group ns="$(arg root)">
+    <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager" output="screen"/>
+
     <node pkg="nodelet" type="nodelet" name="oculus_sonar_driver"
-          args="load oculus_sonar/driver /nodelet_manager"
+          args="load oculus_sonar/driver $(arg manager)"
           output="screen">
       <param name="ip_address" value="$(arg ip_address)"/>
       <param name="range" value="$(arg range)"/>
@@ -46,30 +49,31 @@
     </node>
 
     <node pkg="nodelet" type="nodelet" name="draw_sonar"
-          args="load sonar_image_proc/draw_sonar /nodelet_manager"
+          args="load sonar_image_proc/draw_sonar $(arg manager)"
           output="screen"
           if="$(arg draw_sonar)">
-        <remap from="sonar_image" to="/oculus/sonar_image"/>
-    </node>
-  </group>
-
-  <group ns="postprocess" if="$(arg postprocess_sonar)">
-    <node pkg="nodelet" type="nodelet" name="sonar_postprocessor"
-          args="load sonar_image_proc/sonar_postprocessor /nodelet_manager"
-          output="screen">
-      <!-- Use /oculus/sonar_image as input -->
-      <remap from="sonar_image" to="/oculus/sonar_image"/>
-
-      <!-- Map the output to /postprocess/sonar_image -->
-      <remap from="sonar_image_postproc" to="/postprocess/sonar_image"/>
+        <remap from="sonar_image" to="/$(arg root)/sonar_image"/>
     </node>
 
-    <node pkg="nodelet" type="nodelet" name="draw_sonar"
-          args="load sonar_image_proc/draw_sonar /nodelet_manager"
-          output="screen"
-          if="$(arg draw_sonar)">
-        <remap from="sonar_image" to="/postprocess/sonar_image"/>
-    </node>
+    <group ns="postprocess" if="$(arg postprocess_sonar)">
+      <node pkg="nodelet" type="nodelet" name="sonar_postprocessor"
+            args="load sonar_image_proc/sonar_postprocessor $(arg manager)"
+            output="screen">
+        <!-- Use /oculus/sonar_image as input -->
+        <remap from="sonar_image" to="/$(arg root)/sonar_image"/>
+
+        <!-- Map the output to /postprocess/sonar_image -->
+        <remap from="sonar_image_postproc" to="/$(arg root)/postprocess/sonar_image"/>
+      </node>
+
+      <node pkg="nodelet" type="nodelet" name="draw_sonar"
+            args="load sonar_image_proc/draw_sonar $(arg manager)"
+            output="screen"
+            if="$(arg draw_sonar)">
+          <remap from="sonar_image" to="/$(arg root)/postprocess/sonar_image"/>
+      </node>
+    </group>
+
   </group>
 
 </launch>
