@@ -13,12 +13,11 @@ namespace oculus_sonar_driver {
 
 class PublishingDataRx : public liboculus::DataRx {
  public:
-  PublishingDataRx(const liboculus::IoServiceThread::IoContextPtr &iosrv)
-      : DataRx(iosrv), count_(0) {
-    ;
-  }
+  explicit PublishingDataRx(
+      const liboculus::IoServiceThread::IoContextPtr &iosrv)
+      : DataRx(iosrv), count_(0) {}
 
-  ~PublishingDataRx() { ; }
+  ~PublishingDataRx() {}
 
   // Assume ros::Publishers are copiable
   void setRawPublisher(ros::Publisher pub) { raw_data_pub_ = pub; }

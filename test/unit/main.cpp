@@ -1,3 +1,5 @@
+// Copyright 2020-2023 UW-APL
+// Authors: Aaron Marburg
 
 #include <gtest/gtest.h>
 

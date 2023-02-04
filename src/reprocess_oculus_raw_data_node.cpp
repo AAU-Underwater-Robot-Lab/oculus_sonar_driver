@@ -1,3 +1,6 @@
+// Copyright 2020-2023 UW-APL
+// Authors: Aaron Marburg, Laura Lindzey
+
 #include "g3log_ros/ROSLogSink.h"
 #include "g3log_ros/g3logger.h"
 #include "nodelet/loader.h"

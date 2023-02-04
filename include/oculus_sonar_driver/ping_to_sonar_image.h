@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "acoustic_msgs/ProjectedSonarImage.h"
 #include "liboculus/Constants.h"
 #include "liboculus/SimplePingResult.h"

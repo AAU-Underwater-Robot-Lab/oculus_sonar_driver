@@ -23,9 +23,7 @@ OculusDriver::OculusDriver()
       data_rx_(io_srv_.context()),
       status_rx_(io_srv_.context()),
       sonar_config_(),
-      reconfigure_server_() {
-  ;
-}
+      reconfigure_server_() {}
 
 OculusDriver::~OculusDriver() {
   io_srv_.stop();
@@ -196,9 +194,9 @@ void OculusDriver::configCallback(
   if (data_rx_.isConnected()) {
     data_rx_.sendSimpleFireMessage(sonar_config_);
   }
-};
+}
 
 }  // namespace oculus_sonar_driver
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.h>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(oculus_sonar_driver::OculusDriver, nodelet::Nodelet);

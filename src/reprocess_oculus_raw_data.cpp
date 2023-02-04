@@ -83,6 +83,6 @@ void ReprocessOculusRawData::rawDataCallback(
 
 }  // namespace oculus_sonar_driver
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.h>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(oculus_sonar_driver::ReprocessOculusRawData,
                        nodelet::Nodelet);
