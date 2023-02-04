@@ -83,7 +83,8 @@ acoustic_msgs::ProjectedSonarImage pingToSonarImage(
 
   // \todo  Why am I byte-swapping the data below.  Why not set
   // is_bigendian to true?
-  // NOTE(lindzey): That would be a good test of all our downstream processing code =)
+  // NOTE(lindzey): That would be a good test of all our downstream processing
+  // code =)
   sonar_image.image.is_bigendian = false;
   if (ping.dataSize() == 1) {
     sonar_image.image.dtype = sonar_image.image.DTYPE_UINT8;
@@ -92,7 +93,7 @@ acoustic_msgs::ProjectedSonarImage pingToSonarImage(
   } else if (ping.dataSize() == 4) {
     sonar_image.image.dtype = sonar_image.image.DTYPE_UINT32;
   } else {
-      ROS_ERROR_STREAM("Unrecognized data size: " << ping.dataSize());
+    ROS_ERROR_STREAM("Unrecognized data size: " << ping.dataSize());
   }
 
   sonar_image.image.beam_count = num_bearings;

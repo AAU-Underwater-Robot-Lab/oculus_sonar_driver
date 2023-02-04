@@ -3,32 +3,30 @@
 
 #pragma once
 
-
-#include <cstdlib>
-#include <sstream>
-#include <string>
-#include <memory>
-
-#include "ros/ros.h"
-#include "nodelet/nodelet.h"
-#include "std_msgs/String.h"
 #include <dynamic_reconfigure/server.h>
 
+#include <cstdlib>
+#include <memory>
+#include <sstream>
+#include <string>
+
+#include "nodelet/nodelet.h"
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 
 // Used to get sonar ping info
-#include "liboculus/SimplePingResult.h"
-#include "liboculus/StatusRx.h"
 #include "liboculus/IoServiceThread.h"
+#include "liboculus/SimplePingResult.h"
 #include "liboculus/SonarConfiguration.h"
-
-#include "oculus_sonar_driver/publishing_data_rx.h"
-#include "oculus_sonar_driver/ping_to_sonar_image.h"
+#include "liboculus/StatusRx.h"
 #include "oculus_sonar_driver/ping_to_simple_ping_result_msg.h"
+#include "oculus_sonar_driver/ping_to_sonar_image.h"
+#include "oculus_sonar_driver/publishing_data_rx.h"
 
 // Auto-generated files
-#include "oculus_sonar_driver/OculusSonarConfig.h"
 #include "blueprint_oculus_msgs/OculusMetadata.h"
 #include "blueprint_oculus_msgs/OculusSimplePingResultMsg.h"
+#include "oculus_sonar_driver/OculusSonarConfig.h"
 
 namespace oculus_sonar_driver {
 
@@ -58,7 +56,8 @@ class OculusDriver : public nodelet::Nodelet {
     oculus_meta_pub_.publish(meta);
 
     {
-      blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result = pingToPingResult(ping);
+      blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result =
+          pingToPingResult(ping);
 
       ping_result.header.seq = ping.ping()->pingId;
       ping_result.header.stamp = ros::Time::now();
@@ -90,8 +89,9 @@ class OculusDriver : public nodelet::Nodelet {
 
   liboculus::SonarConfiguration sonar_config_;
 
-  typedef dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig> ReconfigureServer;
+  typedef dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig>
+      ReconfigureServer;
   std::shared_ptr<ReconfigureServer> reconfigure_server_;
 };
 
-}  // namespace oculus_sonar
+}  // namespace oculus_sonar_driver

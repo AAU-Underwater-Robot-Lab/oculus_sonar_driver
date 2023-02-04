@@ -1,10 +1,9 @@
-#include "ros/ros.h"
-#include "nodelet/loader.h"
-
 #include "g3log_ros/ROSLogSink.h"
 #include "g3log_ros/g3logger.h"
+#include "nodelet/loader.h"
+#include "ros/ros.h"
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
   ros::init(argc, argv, "oculus");
 
   libg3logger::G3Logger<ROSLogSink> log_worker("oculus_node");
