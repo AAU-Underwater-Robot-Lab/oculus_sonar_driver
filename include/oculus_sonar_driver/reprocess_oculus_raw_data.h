@@ -3,10 +3,9 @@
 
 #pragma once
 
-#include "ros/ros.h"
-#include "nodelet/nodelet.h"
-
 #include "apl_msgs/RawData.h"
+#include "nodelet/nodelet.h"
+#include "ros/ros.h"
 
 namespace oculus_sonar_driver {
 
@@ -19,7 +18,6 @@ class ReprocessOculusRawData : public nodelet::Nodelet {
   void rawDataCallback(const apl_msgs::RawData::ConstPtr &raw_data);
 
  private:
-
   // Set up all ROS interfaces and start the sonarClient
   void onInit() override;
 

@@ -3,19 +3,19 @@
 
 #pragma once
 
-#include "ros/ros.h"
-
 #include "blueprint_oculus_msgs/OculusSimplePingResultMsg.h"
-#include "liboculus/SimplePingResult.h"
 #include "liboculus/Constants.h"
+#include "liboculus/SimplePingResult.h"
+#include "ros/ros.h"
 
 namespace oculus_sonar_driver {
 
 // This templated function handles the fields that are common to both the
 //  SimplePingResult and SimplePingResultV2 headers.
 //
-template<typename PingT>
-blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(const liboculus::SimplePingResult<PingT> &ping) {
+template <typename PingT>
+blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(
+    const liboculus::SimplePingResult<PingT> &ping) {
   blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result;
 
   // Fields from OculusMessageHeader
@@ -24,7 +24,7 @@ blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(const li
   ping_result.msg_id = ping.ping()->fireMessage.head.msgId;
   ping_result.msg_version = ping.ping()->fireMessage.head.msgVersion;
   ping_result.payload_size = ping.ping()->fireMessage.head.payloadSize;
-  //ping_result.spare2 = ping.ping()->fireMessage.head.spare2;
+  // ping_result.spare2 = ping.ping()->fireMessage.head.spare2;
 
   // ## Fields from OculusSimpleFireMessage / OculusSimpleFireMessage2
   ping_result.master_mode = ping.ping()->fireMessage.masterMode;
@@ -38,12 +38,12 @@ blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(const li
   ping_result.salinity = ping.ping()->fireMessage.salinity;
 
   // Fields from OculusSimplePingResult / OculusSimplePingResult2
-  ping_result.ping_id  = ping.ping()->pingId;
-  ping_result.status  = ping.ping()->status;
+  ping_result.ping_id = ping.ping()->pingId;
+  ping_result.status = ping.ping()->status;
   ping_result.frequency = ping.ping()->frequency;
   ping_result.temperature = ping.ping()->temperature;
   ping_result.pressure = ping.ping()->pressure;
-  ping_result.speed_of_sound_used  = ping.ping()->speedOfSoundUsed;
+  ping_result.speed_of_sound_used = ping.ping()->speedOfSoundUsed;
   ping_result.ping_start_time = ping.ping()->pingStartTime;
 
   // \todo Define ROS Msg ENUMs for the data size types?
@@ -68,8 +68,8 @@ blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResultCommon(const li
 // potential types (below)
 //
 template <typename PingT>
-blueprint_oculus_msgs::OculusSimplePingResultMsg
-pingToPingResult(const liboculus::SimplePingResult<PingT> &ping) {
+blueprint_oculus_msgs::OculusSimplePingResultMsg pingToPingResult(
+    const liboculus::SimplePingResult<PingT> &ping) {
   return pingToPingResultCommon(ping);
 }
 
@@ -79,12 +79,12 @@ pingToPingResult(const liboculus::SimplePingResult<PingT> &ping) {
 template <>
 blueprint_oculus_msgs::OculusSimplePingResultMsg
 pingToPingResult<OculusSimplePingResult>(
-  const liboculus::SimplePingResult<OculusSimplePingResult> &ping) {
+    const liboculus::SimplePingResult<OculusSimplePingResult> &ping) {
   auto ping_result = pingToPingResultCommon(ping);
 
-  ping_result.range =  ping.ping()->fireMessage.range;
+  ping_result.range = ping.ping()->fireMessage.range;
 
-      return ping_result;
+  return ping_result;
 }
 
 // Specialization for SimplePingResultV2
@@ -93,7 +93,7 @@ pingToPingResult<OculusSimplePingResult>(
 template <>
 blueprint_oculus_msgs::OculusSimplePingResultMsg
 pingToPingResult<OculusSimplePingResult2>(
-  const liboculus::SimplePingResultV2 &ping) {
+    const liboculus::SimplePingResultV2 &ping) {
   auto ping_result = pingToPingResultCommon(ping);
   ping_result.range = ping.ping()->fireMessage.rangePercent;
   ping_result.ext_flags = ping.ping()->fireMessage.extFlags;
@@ -104,7 +104,5 @@ pingToPingResult<OculusSimplePingResult2>(
 
   return ping_result;
 }
-
-
 
 }  // namespace oculus_sonar_driver
