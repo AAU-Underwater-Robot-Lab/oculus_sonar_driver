@@ -53,9 +53,9 @@ void OculusDriver::onInit() {
   //     use the private namespace, but I'm not sure how to do that when
   //     nodelets have been compiled into the executable, rather than
   //     configured in a launch file.
-  n_.param<std::string>("ip_address", ip_address_, "auto");
+  pn_.param<std::string>("ip_address", ip_address_, "auto");
 
-  n_.param<std::string>("frame_id", frame_id_, "oculus");
+  pn_.param<std::string>("frame_id", frame_id_, "oculus");
   NODELET_INFO_STREAM("Publishing data with frame = " << frame_id_);
 
   data_rx_.setRawPublisher(raw_data_pub_);
