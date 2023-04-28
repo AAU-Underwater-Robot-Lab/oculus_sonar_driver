@@ -36,7 +36,10 @@
     <node pkg="nodelet" type="nodelet" name="oculus_sonar_driver"
           args="load oculus_sonar/driver $(arg manager)"
           output="screen">
+      <!-- required parameters -->
+      <param name="frame_id" value="$(arg frame_id)"/>
       <param name="ip_address" value="$(arg ip_address)"/>
+      <!-- also settable via dynamic reconfigure -->
       <param name="range" value="$(arg range)"/>
       <param name="ping_rate" value="$(arg ping_rate)"/>
       <param name="gamma" value="$(arg gamma)"/>
@@ -44,8 +47,6 @@
       <param name="freq_mode" value="$(arg freq_mode)"/>
       <param name="data_size" value="$(arg data_size)"/>
       <param name="send_gain" value="$(arg send_gain)"/>
-
-      <param name="frame_id" value="$(arg frame_id)"/>
     </node>
 
     <node pkg="nodelet" type="nodelet" name="draw_sonar"

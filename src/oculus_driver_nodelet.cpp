@@ -48,15 +48,10 @@ void OculusDriver::onInit() {
 
   raw_data_pub_ = n_.advertise<apl_msgs::RawData>("raw_data", 100);
 
-  // NB: Params set in the launch file go to /raven/oculus's namespace,
-  //     rather than /raven/oculus/driver. For normal nodes, should definitely
-  //     use the private namespace, but I'm not sure how to do that when
-  //     nodelets have been compiled into the executable, rather than
-  //     configured in a launch file.
-  pn_.param<std::string>("ip_address", ip_address_, "auto");
-
-  pn_.param<std::string>("frame_id", frame_id_, "oculus");
+  pn_.getParam("ip_address", ip_address_);
+  pn_.getParam("frame_id", frame_id_);
   NODELET_INFO_STREAM("Publishing data with frame = " << frame_id_);
+  NODELET_INFO_STREAM("Will try to connect to sonar at: " << ip_address_);
 
   data_rx_.setRawPublisher(raw_data_pub_);
 
