@@ -82,6 +82,7 @@ void OculusDriver::onInit() {
     status_rx_.setCallback(
         [&](const liboculus::SonarStatus &status, bool is_valid) {
           if (!is_valid || data_rx_.isConnected()) return;
+          NODELET_WARN_STREAM("Auto-detected IP:" << status.ipAddr());
           data_rx_.connect(status.ipAddr());
         });
   } else {
