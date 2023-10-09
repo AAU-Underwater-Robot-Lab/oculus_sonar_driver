@@ -8,7 +8,7 @@ set(OpenCV_DIR /usr/share/OpenCV/)
 
 # Standard dependencies
 find_package(catkin REQUIRED COMPONENTS
-  acoustic_msgs
+  marine_acoustic_msgs
   cmake_modules
   dynamic_reconfigure
   g3log_ros
