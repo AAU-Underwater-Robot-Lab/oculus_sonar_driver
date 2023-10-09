@@ -3,8 +3,8 @@
 
 #include "oculus_sonar_driver/oculus_driver_nodelet.h"
 
-#include <acoustic_msgs/ProjectedSonarImage.h>
 #include <apl_msgs/RawData.h>
+#include <marine_acoustic_msgs/ProjectedSonarImage.h>
 
 #include <boost/asio.hpp>
 

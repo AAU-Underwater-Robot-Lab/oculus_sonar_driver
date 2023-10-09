@@ -5,10 +5,10 @@
 
 #include <memory>
 
-#include "acoustic_msgs/ProjectedSonarImage.h"
 #include "liboculus/Constants.h"
 #include "liboculus/MessageHeader.h"
 #include "liboculus/SimplePingResult.h"
+#include "marine_acoustic_msgs/ProjectedSonarImage.h"
 #include "oculus_sonar_driver/ping_to_sonar_image.h"
 
 namespace oculus_sonar_driver {

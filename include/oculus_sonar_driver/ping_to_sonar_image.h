@@ -5,9 +5,9 @@
 
 #include <vector>
 
-#include "acoustic_msgs/ProjectedSonarImage.h"
 #include "liboculus/Constants.h"
 #include "liboculus/SimplePingResult.h"
+#include "marine_acoustic_msgs/ProjectedSonarImage.h"
 #include "ros/ros.h"
 
 namespace oculus_sonar_driver {
