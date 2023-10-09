@@ -20,9 +20,9 @@ namespace oculus_sonar_driver {
 //
 // \todo Currently has no way to indicate failure...
 template <typename PingT>
-acoustic_msgs::ProjectedSonarImage pingToSonarImage(
+marine_acoustic_msgs::ProjectedSonarImage pingToSonarImage(
     const liboculus::SimplePingResult<PingT> &ping) {
-  acoustic_msgs::ProjectedSonarImage sonar_image;
+  marine_acoustic_msgs::ProjectedSonarImage sonar_image;
 
   sonar_image.ping_info.frequency = ping.ping()->frequency;
   // QUESTION(lindzey): Is there a way to find out what sound speed

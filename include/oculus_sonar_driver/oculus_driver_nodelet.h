@@ -39,7 +39,8 @@ class OculusDriver : public nodelet::Nodelet {
   template <typename Ping_t>
   void pingCallback(const Ping_t &ping) {
     // Publish message parsed into the image format
-    acoustic_msgs::ProjectedSonarImage sonar_msg = pingToSonarImage(ping);
+    marine_acoustic_msgs::ProjectedSonarImage sonar_msg =
+        pingToSonarImage(ping);
 
     sonar_msg.header.seq = ping.ping()->pingId;
     sonar_msg.header.stamp = ros::Time::now();
