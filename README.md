@@ -77,7 +77,7 @@ etc.   This effect seems to be invariant of 256 v 512 beams, and 8/16/32 bit dat
 ----
 # Related Packages
 
-* [acoustic_msgs](https://github.com/apl-ocean-engineering/hydrographic_msgs/tree/main/acoustic_msgs) defines the ROS [ProjectedSonarImage](https://github.com/apl-ocean-engineering/hydrographic_msgs/blob/main/acoustic_msgs/msg/ProjectedSonarImage.msg) message type published by this node.
+* [marine_acoustic_msgs](https://github.com/apl-ocean-engineering/marine_msgs/tree/main/marine_acoustic_msgs) defines the ROS [ProjectedSonarImage](https://github.com/apl-ocean-engineering/marine_msgs/blob/main/marine_acoustic_msgs/msg/ProjectedSonarImage.msg) message type published by this node.
 * [liboculus](https://github.com/apl-ocean-engineering/liboculus) is the underlying (non-ROS) library which parses handles the Oculus network protocol.  It also includes a Boost::Asio-based network client.
 * [sonar_image_proc](https://github.com/apl-ocean-engineering/sonar_image_proc) contains code to postprocess sonar data, including drawing the sonar data to an OpenCV Mat (contains both ROS and non-ROS code).
 * [rqt_sonar_image_view](https://github.com/apl-ocean-engineering/rqt_sonar_image_view) is an Rqt plugin for displaying sonar imagery (uses [sonar_image_proc](https://github.com/apl-ocean-engineering/sonar_image_proc))

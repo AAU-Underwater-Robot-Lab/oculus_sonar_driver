@@ -3,8 +3,8 @@
 
 #include "oculus_sonar_driver/oculus_driver_nodelet.h"
 
-#include <acoustic_msgs/ProjectedSonarImage.h>
 #include <apl_msgs/RawData.h>
+#include <marine_acoustic_msgs/ProjectedSonarImage.h>
 
 #include <boost/asio.hpp>
 
@@ -37,8 +37,8 @@ void OculusDriver::onInit() {
   NODELET_DEBUG_STREAM("Advertising topics in namespace " << n_.getNamespace());
   NODELET_DEBUG_STREAM("Private namespace would be:" << pn_.getNamespace());
 
-  imaging_sonar_pub_ =
-      n_.advertise<acoustic_msgs::ProjectedSonarImage>("sonar_image", 10);
+  imaging_sonar_pub_ = n_.advertise<marine_acoustic_msgs::ProjectedSonarImage>(
+      "sonar_image", 10);
   oculus_meta_pub_ = n_.advertise<blueprint_oculus_msgs::OculusMetadata>(
       "oculus_metadata", 10);
 

@@ -5,10 +5,10 @@
 
 #include <memory>
 
-#include "acoustic_msgs/ProjectedSonarImage.h"
 #include "liboculus/Constants.h"
 #include "liboculus/MessageHeader.h"
 #include "liboculus/SimplePingResult.h"
+#include "marine_acoustic_msgs/ProjectedSonarImage.h"
 #include "oculus_sonar_driver/ping_to_sonar_image.h"
 
 namespace oculus_sonar_driver {
@@ -24,8 +24,8 @@ void ReprocessOculusRawData::onInit() {
   NODELET_DEBUG_STREAM("Advertising topics in namespace " << n_.getNamespace());
   NODELET_DEBUG_STREAM("Private namespace would be:" << pn_.getNamespace());
 
-  sonar_image_pub_ =
-      n_.advertise<acoustic_msgs::ProjectedSonarImage>("sonar_image", 100);
+  sonar_image_pub_ = n_.advertise<marine_acoustic_msgs::ProjectedSonarImage>(
+      "sonar_image", 100);
   raw_data_sub_ = n_.subscribe("raw_data", 1000,
                                &ReprocessOculusRawData::rawDataCallback, this);
 }
@@ -59,7 +59,8 @@ void ReprocessOculusRawData::rawDataCallback(
       liboculus::SimplePingResultV2 ping(buffer);
 
       // Publish message parsed into the image format
-      acoustic_msgs::ProjectedSonarImage sonar_image = pingToSonarImage(ping);
+      marine_acoustic_msgs::ProjectedSonarImage sonar_image =
+          pingToSonarImage(ping);
 
       // Overwrite the header with info from the incoming packet
       sonar_image.header = raw_data->header;
@@ -68,7 +69,8 @@ void ReprocessOculusRawData::rawDataCallback(
       liboculus::SimplePingResultV1 ping(buffer);
 
       // Publish message parsed into the image format
-      acoustic_msgs::ProjectedSonarImage sonar_image = pingToSonarImage(ping);
+      marine_acoustic_msgs::ProjectedSonarImage sonar_image =
+          pingToSonarImage(ping);
 
       // Overwrite the header with info from the incoming packet
       sonar_image.header = raw_data->header;
