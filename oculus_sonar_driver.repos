@@ -1,0 +1,30 @@
+repositories:
+  apl_msgs:
+    type: git
+    url: https://gitlab.com/apl-ocean-engineering/apl_msgs.git
+    version: main
+  blueprint_oculus_msgs:
+    type: git
+    url: https://gitlab.com/apl-ocean-engineering/blueprint_oculus_msgs.git
+    version: main
+  genmypy:
+    type: git
+    url: http://github.com/rospypi/genmypy.git
+    version: master
+  g3log_ros:
+    type: git
+    url: https://gitlab.com/apl-ocean-engineering/g3log_ros.git
+    version: main
+  liboculus:
+    type: git
+    url: https://github.com/apl-ocean-engineering/liboculus.git
+    version: main
+  marine_msgs:
+    type: git
+    url: https://github.com/apl-ocean-engineering/marine_msgs
+    version: "v2.0.0"
+  sonar_image_proc:
+    type: git
+    url: https://github.com/apl-ocean-engineering/sonar_image_proc.git
+    version: main
+
