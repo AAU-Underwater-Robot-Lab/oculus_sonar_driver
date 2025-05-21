@@ -20,19 +20,29 @@ OculusDriver::OculusDriver(const rclcpp::NodeOptions & options)
 OculusDriver::~OculusDriver() {}
 
 void OculusDriver::setupParameters() {
+  this->declare_parameter<bool>("send_range_as_meters", true);
+  this->declare_parameter<bool>("send_gain", true);
+  this->declare_parameter<bool>("send_simple_return", true);
+  this->declare_parameter<bool>("gain_assistance", false);
+
+  // num_beams: 0=256, 1=512 (default 1)
+  this->declare_parameter<int>("num_beams", 1);
+  // range: default 2, min 0, max 40
+  this->declare_parameter<double>("range", 2.0);
+  // gain: default 1, min 1, max 100
+  this->declare_parameter<double>("gain", 1.0);
+  // gamma: default 127, min 0, max 255
+  this->declare_parameter<int>("gamma", 127);
+
+  // ping_rate: 0=Normal, 1=High, 2=Highest, 3=Low, 4=Lowest, 5=Standby (default 0)
+  this->declare_parameter<int>("ping_rate", 0);
+  // data_size: 1=8bit, 2=16bit, 4=32bit (default 1)
+  this->declare_parameter<int>("data_size", 1);
+  // freq_mode: 1=LowFrequency, 2=HighFrequency (default 2)
+  this->declare_parameter<int>("freq_mode", 2);
+
   this->declare_parameter<std::string>("ip_address", "192.168.1.111");
   this->declare_parameter<std::string>("frame_id", "sonar");
-  this->declare_parameter<double>("range", 10.0);
-  this->declare_parameter<int>("gain", 50);
-  this->declare_parameter<double>("gamma", 1.0);
-  this->declare_parameter<int>("ping_rate", 0);
-  this->declare_parameter<int>("freq_mode", 0);
-  this->declare_parameter<bool>("send_range_as_meters", false);
-  this->declare_parameter<bool>("send_gain", false);
-  this->declare_parameter<bool>("send_simple_return", false);
-  this->declare_parameter<bool>("gain_assistance", false);
-  this->declare_parameter<int>("num_beams", 512);
-  this->declare_parameter<int>("data_size", 8);
 
   this->get_parameter("ip_address", ip_address_);
   this->get_parameter("frame_id", frame_id_);
@@ -49,10 +59,9 @@ void OculusDriver::setupPublishers() {
 }
 
 rcl_interfaces::msg::SetParametersResult OculusDriver::configCallback(const std::vector<rclcpp::Parameter> &parameters) {
-  // We'll use the current parameter values for all fields
   double range = this->get_parameter("range").as_double();
-  int gain = this->get_parameter("gain").as_int();
-  double gamma = this->get_parameter("gamma").as_double();
+  double gain = this->get_parameter("gain").as_double();
+  int gamma = this->get_parameter("gamma").as_int();
   int ping_rate = this->get_parameter("ping_rate").as_int();
   int freq_mode = this->get_parameter("freq_mode").as_int();
   bool send_range_as_meters = this->get_parameter("send_range_as_meters").as_bool();
@@ -66,20 +75,21 @@ rcl_interfaces::msg::SetParametersResult OculusDriver::configCallback(const std:
   sonar_config_.setGainPercent(gain);
   sonar_config_.setGamma(gamma);
 
-  // Map ping_rate, freq_mode, num_beams, data_size to liboculus enums as in ROS1
+  // Map ping_rate to liboculus enums
   switch (ping_rate) {
     case 0: sonar_config_.setPingRate(pingRateNormal); break;
     case 1: sonar_config_.setPingRate(pingRateHigh); break;
     case 2: sonar_config_.setPingRate(pingRateHighest); break;
-    case -1: sonar_config_.setPingRate(pingRateLow); break;
-    case -2: sonar_config_.setPingRate(pingRateLowest); break;
-    case 99: sonar_config_.setPingRate(pingRateStandby); break;
+    case 3: sonar_config_.setPingRate(pingRateLow); break;
+    case 4: sonar_config_.setPingRate(pingRateLowest); break;
+    case 5: sonar_config_.setPingRate(pingRateStandby); break;
     default: RCLCPP_WARN(this->get_logger(), "Unknown ping rate %d", ping_rate);
   }
 
+  // Map freq_mode to liboculus enums
   switch (freq_mode) {
-    case 0: sonar_config_.setFreqMode(liboculus::OCULUS_LOW_FREQ); break;
-    case 1: sonar_config_.setFreqMode(liboculus::OCULUS_HIGH_FREQ); break;
+    case 1: sonar_config_.setFreqMode(liboculus::OCULUS_LOW_FREQ); break;
+    case 2: sonar_config_.setFreqMode(liboculus::OCULUS_HIGH_FREQ); break;
     default: RCLCPP_WARN(this->get_logger(), "Unknown frequency mode %d", freq_mode);
   }
 
@@ -88,16 +98,18 @@ rcl_interfaces::msg::SetParametersResult OculusDriver::configCallback(const std:
       .setSimpleReturn(send_simple_return)
       .setGainAssistance(gain_assistance);
 
-  if (num_beams == 256) {
+  // num_beams: 0=256, 1=512
+  if (num_beams == 0) {
     sonar_config_.use256Beams();
   } else {
     sonar_config_.use512Beams();
   }
 
+  // data_size: 1=8bit, 2=16bit, 4=32bit
   switch (data_size) {
-    case 8: sonar_config_.setDataSize(dataSize8Bit); break;
-    case 16: sonar_config_.setDataSize(dataSize16Bit); break;
-    case 32: sonar_config_.setDataSize(dataSize32Bit); break;
+    case 1: sonar_config_.setDataSize(dataSize8Bit); break;
+    case 2: sonar_config_.setDataSize(dataSize16Bit); break;
+    case 4: sonar_config_.setDataSize(dataSize32Bit); break;
     default: RCLCPP_WARN(this->get_logger(), "Unknown data size %d", data_size);
   }
 
