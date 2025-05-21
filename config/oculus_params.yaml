@@ -1,0 +1,15 @@
+oculus_driver:
+  ros__parameters:
+    send_range_as_meters: true
+    send_gain: true
+    send_simple_return: true
+    gain_assistance: false
+    num_beams: 1  # 0=256, 1=512
+    range: 2.0    # min: 0, max: 40
+    gain: 1.0     # min: 1, max: 100
+    gamma: 127    # min: 0, max: 255
+    ping_rate: 0  # 0=Normal, 1=High, 2=Highest, 3=Low, 4=Lowest, 5=Standby
+    data_size: 1  # 1=8bit, 2=16bit, 4=32bit
+    freq_mode: 2  # 1=LowFrequency, 2=HighFrequency
+    ip_address: "192.168.1.111"
+    frame_id: "sonar"
