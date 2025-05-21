@@ -13,17 +13,14 @@ namespace oculus_sonar_driver {
 
 class PublishingDataRx : public liboculus::DataRx {
  public:
-  PublishingDataRx(const liboculus::IoServiceThread::IoContextPtr &iosrv)
-    : DataRx(iosrv),
-      count_(0)
-  {;}
+  explicit PublishingDataRx(
+      const liboculus::IoServiceThread::IoContextPtr &iosrv)
+      : DataRx(iosrv), count_(0) {}
 
-  ~PublishingDataRx() {;}
+  ~PublishingDataRx() {}
 
   // Assume ros::Publishers are copiable
-  void setRawPublisher(ros::Publisher pub) {
-      raw_data_pub_ = pub;
-  }
+  void setRawPublisher(ros::Publisher pub) { raw_data_pub_ = pub; }
 
   void haveWritten(const std::vector<uint8_t> &bytes) override {
     doPublish(bytes, apl_msgs::RawData::DATA_OUT);
@@ -33,8 +30,7 @@ class PublishingDataRx : public liboculus::DataRx {
     doPublish(bytes, apl_msgs::RawData::DATA_IN);
   }
 
-  void doPublish(const std::vector<uint8_t> &bytes,
-                  uint8_t direction) {
+  void doPublish(const std::vector<uint8_t> &bytes, uint8_t direction) {
     if (bytes.size() == 0) return;
 
     apl_msgs::RawData raw_msg;
@@ -53,4 +49,4 @@ class PublishingDataRx : public liboculus::DataRx {
   unsigned int count_;
 };
 
-}
+}  // namespace oculus_sonar_driver

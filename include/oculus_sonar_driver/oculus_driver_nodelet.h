@@ -3,32 +3,30 @@
 
 #pragma once
 
-
-#include <cstdlib>
-#include <sstream>
-#include <string>
-#include <memory>
-
-#include "ros/ros.h"
-#include "nodelet/nodelet.h"
-#include "std_msgs/String.h"
 #include <dynamic_reconfigure/server.h>
 
+#include <cstdlib>
+#include <memory>
+#include <sstream>
+#include <string>
+
+#include "nodelet/nodelet.h"
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 
 // Used to get sonar ping info
-#include "liboculus/SimplePingResult.h"
-#include "liboculus/StatusRx.h"
 #include "liboculus/IoServiceThread.h"
+#include "liboculus/SimplePingResult.h"
 #include "liboculus/SonarConfiguration.h"
-
-#include "oculus_sonar_driver/publishing_data_rx.h"
-#include "oculus_sonar_driver/ping_to_sonar_image.h"
+#include "liboculus/StatusRx.h"
 #include "oculus_sonar_driver/ping_to_simple_ping_result_msg.h"
+#include "oculus_sonar_driver/ping_to_sonar_image.h"
+#include "oculus_sonar_driver/publishing_data_rx.h"
 
 // Auto-generated files
+#include "blueprint_oculus_msgs/OculusMetadata.h"
+#include "blueprint_oculus_msgs/OculusSimplePingResultMsg.h"
 #include "oculus_sonar_driver/OculusSonarConfig.h"
-#include "oculus_sonar_driver/OculusMetadata.h"
-#include "oculus_sonar_driver/OculusSimplePingResultMsg.h"
 
 namespace oculus_sonar_driver {
 
@@ -41,14 +39,15 @@ class OculusDriver : public nodelet::Nodelet {
   template <typename Ping_t>
   void pingCallback(const Ping_t &ping) {
     // Publish message parsed into the image format
-    acoustic_msgs::ProjectedSonarImage sonar_msg = pingToSonarImage(ping);
+    marine_acoustic_msgs::ProjectedSonarImage sonar_msg =
+        pingToSonarImage(ping);
 
     sonar_msg.header.seq = ping.ping()->pingId;
     sonar_msg.header.stamp = ros::Time::now();
     sonar_msg.header.frame_id = frame_id_;
     imaging_sonar_pub_.publish(sonar_msg);
 
-    oculus_sonar_driver::OculusMetadata meta;
+    blueprint_oculus_msgs::OculusMetadata meta;
     meta.header = sonar_msg.header;
 
     // \todo Make this cleaner...
@@ -58,7 +57,8 @@ class OculusDriver : public nodelet::Nodelet {
     oculus_meta_pub_.publish(meta);
 
     {
-      oculus_sonar_driver::OculusSimplePingResultMsg ping_result = pingToPingResult(ping);
+      blueprint_oculus_msgs::OculusSimplePingResultMsg ping_result =
+          pingToPingResult(ping);
 
       ping_result.header.seq = ping.ping()->pingId;
       ping_result.header.stamp = ros::Time::now();
@@ -90,7 +90,9 @@ class OculusDriver : public nodelet::Nodelet {
 
   liboculus::SonarConfiguration sonar_config_;
 
-  dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig> reconfigure_server_;
+  typedef dynamic_reconfigure::Server<oculus_sonar_driver::OculusSonarConfig>
+      ReconfigureServer;
+  std::shared_ptr<ReconfigureServer> reconfigure_server_;
 };
 
-}  // namespace oculus_sonar
+}  // namespace oculus_sonar_driver

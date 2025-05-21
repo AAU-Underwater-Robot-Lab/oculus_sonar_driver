@@ -8,33 +8,17 @@ set(OpenCV_DIR /usr/share/OpenCV/)
 
 # Standard dependencies
 find_package(catkin REQUIRED COMPONENTS
-  acoustic_msgs
+  marine_acoustic_msgs
   cmake_modules
-  cv_bridge
-  sonar_image_proc
   dynamic_reconfigure
   g3log_ros
-  image_transport
-  liboculus REQUIRED
-  message_generation
+  blueprint_oculus_msgs
+  liboculus
   nodelet
   nodelet_topic_tools
   roscpp
-  rospy
-  sensor_msgs
-  std_msgs
   apl_msgs
 )
-
-## Build messages
-add_message_files(
-  FILES
-  OculusMetadata.msg
-  OculusSimplePingResultMsg.msg
-)
-
-generate_messages(DEPENDENCIES std_msgs)
-
 
 #add dynamic reconfigure api
 generate_dynamic_reconfigure_options(
@@ -43,7 +27,6 @@ generate_dynamic_reconfigure_options(
 
 ## Compile as C++14, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
-
 
 catkin_package(
   INCLUDE_DIRS include
@@ -57,7 +40,7 @@ include_directories(
 )
 
 
-add_library(oculus_driver_nodelet 
+add_library(oculus_driver_nodelet
             src/oculus_driver_nodelet.cpp
             src/reprocess_oculus_raw_data.cpp)
 target_link_libraries(oculus_driver_nodelet ${catkin_LIBRARIES})
@@ -76,7 +59,7 @@ add_dependencies(oculus_driver
   ${PROJECT_NAME}_gencfg
 )
 
-#### 
+####
 add_executable(reprocess_oculus_raw_data src/reprocess_oculus_raw_data_node.cpp)
 target_link_libraries(reprocess_oculus_raw_data
   ${catkin_LIBRARIES}
@@ -91,7 +74,7 @@ install(TARGETS oculus_driver
                 reprocess_oculus_raw_data
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
 
-install(TARGETS oculus_driver_nodelet 
+install(TARGETS oculus_driver_nodelet
 	      DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
