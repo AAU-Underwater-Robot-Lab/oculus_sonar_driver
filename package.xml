@@ -3,9 +3,10 @@
   <name>oculus_sonar_driver</name>
   <version>0.1.0</version>
   <description>ROS2 driver for Oculus sonar devices using liboculus.</description>
-  <maintainer email="your.email@example.com">Your Name</maintainer>
-  <license>MIT</license>
-
+  <maintainer email="amarburg@uw.edu">A. Marburg</maintainer>
+  <maintainer email="chrimai@energy.aau.dk">Christian Mai</maintainer>
+  <license>BSD</license>
+  
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
