@@ -1,36 +1,22 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>oculus_sonar_driver</name>
-  <version>0.0.1</version>
-  <description>ROS Package to interface with a Blueprint Subsea Oculus imaging sonar</description>
+  <version>0.1.0</version>
+  <description>ROS2 driver for Oculus sonar devices using liboculus.</description>
+  <maintainer email="your.email@example.com">Your Name</maintainer>
+  <license>MIT</license>
 
-  <maintainer email="amarburg@uw.edu">A. Marburg</maintainer>
-  <license>BSD
-  </license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <!-- ROS build reqs -->
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>blueprint_oculus_msgs</build_depend>
-  <depend>message_generation</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>sensor_msgs</depend>
-
-  <exec_depend>roscpp</exec_depend>
-
-  <depend>apl_msgs</depend>
-  <depend>marine_acoustic_msgs</depend>
-  <depend>cv_bridge</depend>
-  <depend>sonar_image_proc</depend>
-  <depend>g3log_ros</depend>
-  <depend>image_transport</depend>
-  <depend>liboculus</depend>
-  <depend>nodelet</depend>
-  <depend>nodelet_topic_tools</depend>
-  <depend>rospy</depend>
   <depend>std_msgs</depend>
+  <depend>marine_acoustic_msgs</depend>
+  <depend>g3log_ros</depend>
+  <depend>liboculus</depend>
 
   <export>
-    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
-
 </package>

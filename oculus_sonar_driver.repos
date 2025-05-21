@@ -14,7 +14,7 @@ repositories:
   g3log_ros:
     type: git
     url: https://gitlab.com/apl-ocean-engineering/g3log_ros.git
-    version: main
+    version: ros2
   liboculus:
     type: git
     url: https://github.com/apl-ocean-engineering/liboculus.git
@@ -22,7 +22,7 @@ repositories:
   marine_msgs:
     type: git
     url: https://github.com/apl-ocean-engineering/marine_msgs
-    version: "v2.0.0"
+    version: ros2
   sonar_image_proc:
     type: git
     url: https://github.com/apl-ocean-engineering/sonar_image_proc.git

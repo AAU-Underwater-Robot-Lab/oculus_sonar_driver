@@ -1,93 +1,78 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8)
 project(oculus_sonar_driver)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++14)
-
-set(OpenCV_DIR /usr/share/OpenCV/)
-
-# Standard dependencies
-find_package(catkin REQUIRED COMPONENTS
-  marine_acoustic_msgs
-  cmake_modules
-  dynamic_reconfigure
-  g3log_ros
-  blueprint_oculus_msgs
-  liboculus
-  nodelet
-  nodelet_topic_tools
-  roscpp
-  apl_msgs
-)
-
-#add dynamic reconfigure api
-generate_dynamic_reconfigure_options(
-  cfg/OculusSonar.cfg
-)
-
-## Compile as C++14, supported in ROS Kinetic and newer
-add_compile_options(-std=c++14)
-
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS liboculus g3log_ros image_transport
-)
-
-include_directories(
-  ${OpenCV_INCLUDE_DIRS}
-  include/
-  ${catkin_INCLUDE_DIRS}
-)
-
-
-add_library(oculus_driver_nodelet
-            src/oculus_driver_nodelet.cpp
-            src/reprocess_oculus_raw_data.cpp)
-target_link_libraries(oculus_driver_nodelet ${catkin_LIBRARIES})
-class_loader_hide_library_symbols(oculus_driver_nodelet)
-add_dependencies(oculus_driver_nodelet
-  ${catkin_EXPORTED_TARGETS}
-)
-
-####
-add_executable(oculus_driver src/oculus_node.cpp)
-target_link_libraries(oculus_driver
-  ${catkin_LIBRARIES}
-)
-add_dependencies(oculus_driver
-  ${catkin_EXPORTED_TARGETS}
-  ${PROJECT_NAME}_gencfg
-)
-
-####
-add_executable(reprocess_oculus_raw_data src/reprocess_oculus_raw_data_node.cpp)
-target_link_libraries(reprocess_oculus_raw_data
-  ${catkin_LIBRARIES}
-)
-add_dependencies(reprocess_oculus_raw_data
-  ${catkin_EXPORTED_TARGETS}
-  ${PROJECT_NAME}_gencfg
-)
-
-####
-install(TARGETS oculus_driver
-                reprocess_oculus_raw_data
-DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
-
-install(TARGETS oculus_driver_nodelet
-	      DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
-
-install( DIRECTORY launch/
-         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch )
-install( DIRECTORY rqt_config/
-         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/rqt_config )
-
-install( FILES nodelet_plugins.xml
-  		   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
-if (CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(oculus_sonar_test test/unit/main.cpp)
-  target_link_libraries(oculus_sonar_test ${catkin_LIBRARIES})
+# Use C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
+
+add_compile_options(-std=c++17)
+
+# Find ROS2 packages
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(marine_acoustic_msgs REQUIRED)
+find_package(g3log_ros REQUIRED)
+find_package(liboculus REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(g3log REQUIRED)
+
+# Ensure CMake can find g3log_rosConfig.cmake
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/g3log_ros")
+
+# Include headers
+include_directories(
+  include
+  ../liboculus/include
+  ../liboculus/thirdparty
+  ${CMAKE_INSTALL_PREFIX}/include/g3log
+  ${CMAKE_INSTALL_PREFIX}/include
+)
+include_directories(${CMAKE_SOURCE_DIR}/liboculus)
+
+# Add g3log_ros library directory for linker to find g3log
+link_directories(${CMAKE_INSTALL_PREFIX}/g3log_ros/lib)
+
+# Build the ROS2 node executable only
+add_executable(oculus_driver_node
+  src/oculus_driver_node.cpp
+)
+
+target_link_libraries(oculus_driver_node
+  liboculus::oculus
+  g3log
+)
+
+ament_target_dependencies(oculus_driver_node
+  rclcpp
+  sensor_msgs
+  std_msgs
+  marine_acoustic_msgs
+  g3log_ros
+  liboculus
+)
+
+# Install the node executable
+install(TARGETS oculus_driver_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+# Install launch and config files
+install(DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch
+)
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+# Install headers, but exclude ping_to_simple_ping_result_msg.h
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+# Export package
+ament_package()

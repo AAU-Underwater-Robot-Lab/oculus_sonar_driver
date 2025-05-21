@@ -7,8 +7,10 @@
 
 #include "liboculus/Constants.h"
 #include "liboculus/SimplePingResult.h"
-#include "marine_acoustic_msgs/ProjectedSonarImage.h"
-#include "ros/ros.h"
+// Only keep marine_acoustic_msgs
+#include "marine_acoustic_msgs/msg/projected_sonar_image.hpp"
+
+#include "rclcpp/rclcpp.hpp"
 
 namespace oculus_sonar_driver {
 
@@ -20,9 +22,9 @@ namespace oculus_sonar_driver {
 //
 // \todo Currently has no way to indicate failure...
 template <typename PingT>
-marine_acoustic_msgs::ProjectedSonarImage pingToSonarImage(
+marine_acoustic_msgs::msg::ProjectedSonarImage pingToSonarImage(
     const liboculus::SimplePingResult<PingT> &ping) {
-  marine_acoustic_msgs::ProjectedSonarImage sonar_image;
+  marine_acoustic_msgs::msg::ProjectedSonarImage sonar_image;
 
   sonar_image.ping_info.frequency = ping.ping()->frequency;
   // QUESTION(lindzey): Is there a way to find out what sound speed
@@ -55,10 +57,7 @@ marine_acoustic_msgs::ProjectedSonarImage pingToSonarImage(
     sonar_image.ping_info.tx_beamwidths = std::vector<float>(
         num_bearings, liboculus::Oculus_1200MHz::ElevationBeamwidthRad);
   } else {
-    ROS_ERROR_STREAM("Unsupported frequency received from oculus: "
-                     << sonar_image.ping_info.frequency
-                     << ". Not publishing ProjectedSonarImage "
-                     << "for seq# " << sonar_image.header.seq);
+    RCLCPP_ERROR(rclcpp::get_logger("ping_to_sonar_image"), "Unsupported frequency received from oculus: %d. Not publishing ProjectedSonarImage", sonar_image.ping_info.frequency);
   }
 
   sonar_image.beam_directions.resize(num_bearings);
@@ -95,7 +94,7 @@ marine_acoustic_msgs::ProjectedSonarImage pingToSonarImage(
   } else if (ping.dataSize() == 4) {
     sonar_image.image.dtype = sonar_image.image.DTYPE_UINT32;
   } else {
-    ROS_ERROR_STREAM("Unrecognized data size: " << ping.dataSize());
+    RCLCPP_ERROR(rclcpp::get_logger("ping_to_sonar_image"), "Unrecognized data size: %d", ping.dataSize());
   }
 
   sonar_image.image.beam_count = num_bearings;
