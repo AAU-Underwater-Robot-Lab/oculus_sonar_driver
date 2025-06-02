@@ -38,7 +38,7 @@ OculusDriver::OculusDriver(const rclcpp::NodeOptions & options)
       this
     ](const liboculus::SonarStatus &status, bool is_valid) {
       if (!is_valid || data_rx_.isConnected()) return;
-      RCLCPP_WARN(this->get_logger(), "Auto-detected IP: %s", status.ipAddr().c_str());
+      RCLCPP_WARN(this->get_logger(), "Auto-detected IP: %s", status.ipAddr().to_string().c_str());
       data_rx_.connect(status.ipAddr());
     });
   } else {
