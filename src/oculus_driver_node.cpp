@@ -14,10 +14,45 @@ OculusDriver::OculusDriver(const rclcpp::NodeOptions & options)
       status_rx_(io_srv_.context()) {
   setupParameters();
   setupPublishers();
-  // TODO: Set up data_rx_ and status_rx_ as needed for ROS2
+
+  // Set up data_rx_ callbacks for SimplePingResultV1 and V2
+  data_rx_.setCallback<liboculus::SimplePingResultV1>(
+      std::bind(&OculusDriver::pingCallback<liboculus::SimplePingResultV1>, this, std::placeholders::_1));
+  data_rx_.setCallback<liboculus::SimplePingResultV2>(
+      std::bind(&OculusDriver::pingCallback<liboculus::SimplePingResultV2>, this, std::placeholders::_1));
+
+  // Set up on-connect callback to send current config
+  data_rx_.setOnConnectCallback([
+    this
+  ]() {
+    data_rx_.sendSimpleFireMessage(sonar_config_);
+  });
+
+  // Set up raw data publisher if/when available
+  // data_rx_.setRawPublisher(raw_data_pub_);
+
+  // Handle auto IP detection or direct connect
+  if (ip_address_ == "auto") {
+    RCLCPP_INFO(this->get_logger(), "Attempting to auto-detect sonar");
+    status_rx_.setCallback([
+      this
+    ](const liboculus::SonarStatus &status, bool is_valid) {
+      if (!is_valid || data_rx_.isConnected()) return;
+      RCLCPP_WARN(this->get_logger(), "Auto-detected IP: %s", status.ipAddr().c_str());
+      data_rx_.connect(status.ipAddr());
+    });
+  } else {
+    RCLCPP_INFO(this->get_logger(), "Opening sonar at %s", ip_address_.c_str());
+    data_rx_.connect(ip_address_);
+  }
+
+  io_srv_.start();
 }
 
-OculusDriver::~OculusDriver() {}
+OculusDriver::~OculusDriver() {
+  io_srv_.stop();
+  io_srv_.join();
+}
 
 void OculusDriver::setupParameters() {
   this->declare_parameter<bool>("send_range_as_meters", true);
