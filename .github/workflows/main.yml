@@ -39,12 +39,12 @@ jobs:
         git push origin --all
         git push origin --tags
 
-    - name: Pull from GitHub and push to GitLab
-      run: |
-        cd /tmp/repo.git
-        for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/); do
-          name=$(echo "$branch" | sed 's|^origin/||')
-          git branch -f "$name" "origin/$name" || true
-        done
-        git push gitlab --all
-        git push gitlab --tags
+    #- name: Pull from GitHub and push to GitLab
+    #  run: |
+    #    cd /tmp/repo.git
+    #    for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/); do
+    #      name=$(echo "$branch" | sed 's|^origin/||')
+    #      git branch -f "$name" "origin/$name" || true
+    #    done
+    #    git push gitlab --all
+    #    git push gitlab --tags
