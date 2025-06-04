@@ -1,32 +1,34 @@
 name: Bidirectional GitHub ↔ GitLab Sync
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:       # Manual trigger
   schedule:
-    - cron: '0 * * * *'  # every hour
+    - cron: '0 * * * *'     # Hourly sync
+
+permissions:
+  contents: write           # Needed to push to GitHub
 
 jobs:
-  bidirectional-sync:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Git
+    - name: Configure Git identity
       run: |
         git config --global user.name "${{ secrets.GIT_USER_NAME }}"
         git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
 
-    - name: Clone GitHub repository (bare)
+    - name: Clone GitHub repo (bare)
       run: |
         git clone --bare "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo.git
-
 
     - name: Add GitLab remote and fetch
       run: |
         cd repo.git
         git remote add gitlab "${{ secrets.GITLAB_REPO_URL }}"
-        git fetch gitlab
+        git fetch --all
 
-    - name: Pull from GitLab and push to GitHub
+    - name: Pull GitLab changes into GitHub mirror
       run: |
         cd repo.git
         for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/gitlab/); do
@@ -35,7 +37,7 @@ jobs:
         git push origin --all
         git push origin --tags
 
-    - name: Pull from GitHub and push to GitLab
+    - name: Pull GitHub changes into GitLab mirror
       run: |
         cd repo.git
         for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/); do
