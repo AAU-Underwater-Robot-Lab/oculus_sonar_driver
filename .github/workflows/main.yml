@@ -1,47 +1,50 @@
 name: Bidirectional GitHub ↔ GitLab Sync
 
 on:
-  workflow_dispatch:       # Manual trigger
+  workflow_dispatch:         # Manual run via GitHub UI
   schedule:
-    - cron: '0 * * * *'     # Hourly sync
+    - cron: '0 * * * *'       # Run hourly
 
 permissions:
-  contents: write           # Needed to push to GitHub
+  contents: write             # Required to push to GitHub
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Configure Git identity
+    - name: Set up Git identity
       run: |
         git config --global user.name "${{ secrets.GIT_USER_NAME }}"
         git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
 
-    - name: Clone GitHub repo (bare)
+    - name: Clone GitHub repository (bare)
       run: |
-        git clone --bare "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo.git
+        git clone --bare "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" /tmp/repo.git
 
     - name: Add GitLab remote and fetch
       run: |
-        cd repo.git
+        cd /tmp/repo.git
+        git remote remove gitlab || true
         git remote add gitlab "${{ secrets.GITLAB_REPO_URL }}"
         git fetch --all
 
-    - name: Pull GitLab changes into GitHub mirror
+    - name: Pull from GitLab and push to GitHub
       run: |
-        cd repo.git
+        cd /tmp/repo.git
         for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/gitlab/); do
-          git branch -f "$branch" "gitlab/$branch" || true
+          name=$(echo "$branch" | sed 's|^gitlab/||')
+          git branch -f "$name" "gitlab/$name" || true
         done
         git push origin --all
         git push origin --tags
 
-    - name: Pull GitHub changes into GitLab mirror
+    - name: Pull from GitHub and push to GitLab
       run: |
-        cd repo.git
+        cd /tmp/repo.git
         for branch in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/); do
-          git branch -f "$branch" "origin/$branch" || true
+          name=$(echo "$branch" | sed 's|^origin/||')
+          git branch -f "$name" "origin/$name" || true
         done
         git push gitlab --all
         git push gitlab --tags
