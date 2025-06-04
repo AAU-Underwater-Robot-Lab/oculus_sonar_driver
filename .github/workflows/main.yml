@@ -17,8 +17,8 @@ jobs:
 
     - name: Clone GitHub repository (bare)
       run: |
-        git clone --bare "${{ secrets.GITHUB_REPO_URL }}" repo.git
-        cd repo.git
+        git clone --bare "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" repo.git
+
 
     - name: Add GitLab remote and fetch
       run: |
