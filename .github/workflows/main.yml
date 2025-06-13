@@ -3,7 +3,7 @@ name: Bidirectional GitHub ↔ GitLab Sync
 on:
   workflow_dispatch:         # Manual run via GitHub UI
   schedule:
-    - cron: '0 * * * *'       # Run hourly
+    - cron: '0 1 * * *'       # Run hourly
 
 permissions:
   contents: write             # Required to push to GitHub
